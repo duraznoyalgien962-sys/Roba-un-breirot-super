@@ -1,79 +1,98 @@
 
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local UICorner = Instance.new("UICorner")
-local Title = Instance.new("TextLabel")
-local SpawnButton = Instance.new("TextButton")
-local EventButton = Instance.new("TextButton")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-ScreenGui.Name = "GodHub"
-ScreenGui.Parent = game.CoreGui
+-- Lista de breirots
+local breirots = {
+    "tem cheese",
+    "strobbery helepant",
+    "garama and madundung",
+    "dragón canelloni",
+    "meowl",
+    "lucky block secret",
+    "lucky block administrador",
+    "la supreme combinaciòn",
+    "matteo",
+    "tralalero tralala",
+    "tripi tropi tropa tripa",
+    "trulimero truliccina",
+    "odindindun",
+    "la cucaracha",
+    "spooky lucky block",
+    "las vaquitas saturnitas",
+    "tralaledon",
+    "tic tac sajur",
+    "noo my examen",
+    "las sis",
+    "los bros",
+    "los primos",
+    "celularcini bisiocini",
+    "los lucky blocks",
+    "esok seckola"
+}
 
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Frame.Position = UDim2.new(0.35, 0, 0.3, 0)
-Frame.Size = UDim2.new(0, 300, 0, 200)
+-- Crear GUI
+local ScreenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
+ScreenGui.Name = "SpawnerBreirotHub"
 
-UICorner.Parent = Frame
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 400, 0, 500)
+Frame.Position = UDim2.new(0.5, -200, 0.5, -250)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
 
-Title.Parent = Frame
+local UIListLayout = Instance.new("UIListLayout", Frame)
+UIListLayout.Padding = UDim.new(0,5)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Título
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1,0,0,50)
+Title.Text = "Spawner Breirot"
+Title.TextColor3 = Color3.fromRGB(255,255,255)
 Title.BackgroundTransparency = 1
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "💀 GOD HUB 💀"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextScaled = true
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 24
 
-SpawnButton.Parent = Frame
-SpawnButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-SpawnButton.Position = UDim2.new(0.15, 0, 0.35, 0)
-SpawnButton.Size = UDim2.new(0.7, 0, 0.25, 0)
-SpawnButton.Text = "🌪️ Spawn Breirots"
-SpawnButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-SpawnButton.TextScaled = true
-UICorner:Clone().Parent = SpawnButton
-
-EventButton.Parent = Frame
-EventButton.BackgroundColor3 = Color3.fromRGB(80, 60, 100)
-EventButton.Position = UDim2.new(0.15, 0, 0.65, 0)
-EventButton.Size = UDim2.new(0.7, 0, 0.25, 0)
-EventButton.Text = "🎇 Activar Eventos"
-EventButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-EventButton.TextScaled = true
-UICorner:Clone().Parent = EventButton
-
--- Funcionalidad
-local plr = game.Players.LocalPlayer
-local rep = game:GetService("ReplicatedStorage")
-
-SpawnButton.MouseButton1Click:Connect(function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "GOD HUB",
-        Text = "Spawneando Breirots reales 🔥",
-        Duration = 3
-    })
-
-    local nombres = {"Breirot1", "Breirot2", "Breirot3"} -- cambia estos por los nombres reales del juego
-
-    for _, n in pairs(nombres) do
-        local modelo = rep:FindFirstChild(n)
-        if modelo then
-            local clon = modelo:Clone()
-            clon.Parent = workspace
-            clon:MoveTo(plr.Character.HumanoidRootPart.Position + Vector3.new(math.random(-5,5),0,math.random(-5,5)))
+-- Crear botones para cada breirot
+for i, name in pairs(breirots) do
+    local button = Instance.new("TextButton", Frame)
+    button.Size = UDim2.new(1, -10, 0, 40)
+    button.Text = "Spawn "..name
+    button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    button.TextColor3 = Color3.fromRGB(255,255,255)
+    button.Font = Enum.Font.SourceSans
+    button.TextSize = 18
+    button.MouseButton1Click:Connect(function()
+        -- Función para spawnear breirot
+        local BreirotModel = ReplicatedStorage:FindFirstChild(name)
+        if BreirotModel then
+            local clone = BreirotModel:Clone()
+            clone.Parent = workspace
+            clone.Position = LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,5,0)
+        else
+            warn("Breirot no encontrado: "..name)
         end
-    end
-end)
+    end)
+end
 
+-- Eventos (ejemplo simple)
+local EventButton = Instance.new("TextButton", Frame)
+EventButton.Size = UDim2.new(1, -10, 0, 40)
+EventButton.Text = "Activar Evento Aleatorio"
+EventButton.BackgroundColor3 = Color3.fromRGB(200,50,50)
+EventButton.TextColor3 = Color3.fromRGB(255,255,255)
+EventButton.Font = Enum.Font.SourceSansBold
+EventButton.TextSize = 18
 EventButton.MouseButton1Click:Connect(function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "GOD HUB",
-        Text = "Eventos activados 💥",
-        Duration = 3
-    })
-
-    for _, ev in pairs(rep:GetChildren()) do
-        if ev:IsA("RemoteEvent") then
-            ev:FireServer()
-        end
+    local randomBreirot = breirots[math.random(1,#breirots)]
+    local BreirotModel = ReplicatedStorage:FindFirstChild(randomBreirot)
+    if BreirotModel then
+        local clone = BreirotModel:Clone()
+        clone.Parent = workspace
+        clone.Position = LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,10,0)
     end
 end)
